@@ -34,13 +34,13 @@ module comparator #(
 	//============================================
 
 	// Flag FIFO almost full
-	assign o_almostfull = (num_elements[ADDR_WIDTH-1:0] >= i_almostfull_lvl);
+	assign o_almostfull = (num_elements >= i_almostfull_lvl);
 
 	// Flag FIFO full
-	assign o_full = (num_elements[ADDR_WIDTH-1:0] == (FIFO_DEPTH - 1));
+	assign o_full = (num_elements == FIFO_DEPTH);
 
 	// Flag FIFO almost empty
-	assign o_almostempty = (num_elements[ADDR_WIDTH-1:0] <= i_almostempty_lvl);
+	assign o_almostempty = (num_elements <= i_almostempty_lvl);
 
 	// Flag FIFO empty
 	assign o_empty = (num_elements == 0);
