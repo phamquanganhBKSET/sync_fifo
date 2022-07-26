@@ -1,4 +1,4 @@
-`include "sync_fifo_defines.vh"
+`include "../inc/sync_fifo_defines.vh"
 
 module comparator #(
 	parameter FIFO_DEPTH = `FIFO_DEPTH       , // FIFO depth
@@ -9,10 +9,12 @@ module comparator #(
 	input  [ADDR_WIDTH:0]   rd_addr          , // Read address
 	input  [ADDR_WIDTH-1:0] i_almostfull_lvl , // The number of empty memory locations in the FIFO at which the o_almostfull flag is active
     input  [ADDR_WIDTH-1:0] i_almostempty_lvl, // The number of empty memory locations in the FIFO at which the o_almostempty flag is active
+	output                  o_ready_s        , // Status write data into FIFO (if FIFO not full then o_ready_s = 1)					
 	output                  o_almostfull     , // FIFO almostfull flag (determined by i_almostfull_lvl)
 	output                  o_full           , // FIFO full flag
+	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
 	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
-	output                  o_empty          , // FIFO empty flag
+	output                  o_empty            // FIFO empty flag
 );
 
 	//============================================

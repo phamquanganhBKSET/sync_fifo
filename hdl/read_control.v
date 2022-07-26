@@ -1,14 +1,16 @@
-`include "sync_fifo_defines.vh"
+`include "../inc/sync_fifo_defines.vh"
 
 module read_control #(
-	parameter DATA_WIDTH = `DATA_WIDTH
+	parameter MEM_DEPTH  = `FIFO_DEPTH      , // Memory depth
+	parameter DATA_WIDTH = `DATA_WIDTH      , // Data width
+	parameter ADDR_WIDTH = $clog2(MEM_DEPTH) // Address width
 )
 (
-	input                 clk     , // Clock signal
-	input                 reset_n , // Source domain asynchronous reset (active low)
-	input                 rd_ready, // Request read data from FIFO
-	input                 rd_empty, // FIFO empty flag
-	output [ADDR_WIDTH:0] rd_addr   // Read address
+	input                     clk     , // Clock signal
+	input                     reset_n , // Source domain asynchronous reset (active low)
+	input                     rd_ready, // Request read data from FIFO
+	input                     rd_empty, // FIFO empty flag
+	output reg [ADDR_WIDTH:0] rd_addr   // Read address
 );
 
 	//============================================

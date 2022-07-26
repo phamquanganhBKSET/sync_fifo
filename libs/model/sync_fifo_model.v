@@ -19,7 +19,7 @@ module sync_fifo_model #(
 	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
 	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
 	output                  o_empty          , // FIFO empty flag
-	output [FIFO_DEPTH-1:0] o_dataout          // Pop data from FIFO
+	output [DATA_WIDTH-1:0] o_dataout          // Pop data from FIFO
 );
 
 	//============================================
@@ -51,7 +51,7 @@ module sync_fifo_model #(
 		if(~i_rst_n) begin
 			fifo_mem <= 0;
 		end else begin
-			fifo_mem[wr_ptr[ADDR_WIDTH-1:0]] <= (i_valid_s & (!o_full)) ? i_datain : fifo_mem[wr_ptr[ADDR_WIDTH-1:0]];
+			fifo_mem[wptr[ADDR_WIDTH-1:0]] <= (i_valid_s & (!o_full)) ? i_datain : fifo_mem[wr_ptr[ADDR_WIDTH-1:0]];
 		end
 	end
 

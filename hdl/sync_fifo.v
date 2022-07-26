@@ -1,4 +1,4 @@
-`include "sync_fifo_defines.vh"
+`include "../inc/sync_fifo_defines.vh"
 
 module sync_fifo #(
 	parameter FIFO_DEPTH = `FIFO_DEPTH       , // FIFO depth
@@ -19,7 +19,7 @@ module sync_fifo #(
 	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
 	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
 	output                  o_empty          , // FIFO empty flag
-	output [FIFO_DEPTH-1:0] o_dataout          // Pop data from FIFO
+	output [DATA_WIDTH-1:0] o_dataout          // Pop data from FIFO
 );
 
 	//============================================
@@ -64,7 +64,7 @@ module sync_fifo #(
 	read_control read_control_inst (
 		.clk     (i_clk    ),
 		.reset_n (i_rst_n  ),
-		.rd_ready(o_ready_s),
+		.rd_ready(i_ready_m),
 		.rd_empty(o_empty  ),
 		.rd_addr (rd_addr  ) 
 	);
@@ -78,10 +78,12 @@ module sync_fifo #(
 		.rd_addr          (rd_addr          ),
 		.i_almostfull_lvl (i_almostfull_lvl ),
 		.i_almostempty_lvl(i_almostempty_lvl),
-		.o_almostfull     (o_almostfull     ),
-		.o_full           (o_full           ),
-		.o_almostempty    (o_almostempty    ),
-		.o_empty          (o_empty          ) 
+        .o_ready_s        (o_ready_s        ),
+        .o_almostfull     (o_almostfull     ),
+        .o_full           (o_full           ),
+        .o_valid_m        (o_valid_m        ),
+        .o_almostempty    (o_almostempty    ),
+        .o_empty          (o_empty          ) 
 	);
 
 endmodule

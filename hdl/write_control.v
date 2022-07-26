@@ -1,15 +1,17 @@
-`include "sync_fifo_defines.vh"
+`include "../inc/sync_fifo_defines.vh"
 
 module write_control #(
-	parameter DATA_WIDTH = `DATA_WIDTH
+	parameter MEM_DEPTH  = `FIFO_DEPTH      , // Memory depth
+	parameter DATA_WIDTH = `DATA_WIDTH      , // Data width
+	parameter ADDR_WIDTH = $clog2(MEM_DEPTH) // Address width
 )
 (
-	input                 clk     , // Clock signal
-	input                 reset_n , // Source domain asynchronous reset (active low)
-	input                 wr_valid, // Request write data into FIFO
-	input                 wr_full , // FIFO full flag
-	output                wr_en   , // Write data
-	output [ADDR_WIDTH:0] wr_addr   // Write address
+	input                     clk     , // Clock signal
+	input                     reset_n , // Source domain asynchronous reset (active low)
+	input                     wr_valid, // Request write data into FIFO
+	input                     wr_full , // FIFO full flag
+	output                    wr_en   , // Write data
+	output reg [ADDR_WIDTH:0] wr_addr   // Write address
 );
 
 	//============================================

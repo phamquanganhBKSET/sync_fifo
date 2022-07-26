@@ -1,32 +1,34 @@
-`include "sync_fifo_defines.vh"
+`include "../../inc/sync_fifo_defines.vh"
+
+`timescale 1ns/1ps
 
 module sync_fifo_tb 
 #(
-	parameter FIFO_DEPTH = 8,
-	parameter DATA_WIDTH = 32,
-	parameter WIDTH      = 8
+	parameter FIFO_DEPTH = `FIFO_DEPTH       , // FIFO depth
+	parameter DATA_WIDTH = `DATA_WIDTH       , // Data width
+	parameter ADDR_WIDTH = $clog2(FIFO_DEPTH)  // Address width
 ) ();
 
-logic                  i_clk            ;
-logic                  i_rst_n          ;
-logic                  i_valid_s        ;
-logic                  i_ready_m        ;
-logic [WIDTH-1:0]      i_almostempty_lvl;
-logic [WIDTH-1:0]      i_almostfull_lvl ;
-logic [DATA_WIDTH-1:0] i_datain         ;
-wire                   o_almostfull     ;
-wire                   o_full           ;
-wire                   o_ready_s        ;
-wire                   o_valid_m        ;
-wire                   o_almostempty    ;
-wire                   o_empty          ;
-wire  [DATA_WIDTH-1:0] o_dataout        ;
+logic                   i_clk            ; // Clock signal
+logic                   i_rst_n          ; // Source domain asynchronous reset (active low)
+logic                   i_valid_s        ; // Request write data into FIFO
+logic  [ADDR_WIDTH-1:0] i_almostfull_lvl ; // The number of empty memory locations in the FIFO at which the o_almostfull flag is active
+logic  [DATA_WIDTH-1:0] i_datain         ; // Push data in FIFO
+logic                   i_ready_m        ; // Request read data from FIFO
+logic  [ADDR_WIDTH-1:0] i_almostempty_lvl; // The number of empty memory locations in the FIFO at which the o_almostempty flag is active
+wire                    o_ready_s        ; // Status write data into FIFO (if FIFO not full then o_ready_s = 1)					
+wire                    o_almostfull     ; // FIFO almostfull flag (determined by i_almostfull_lvl)
+wire                    o_full           ; // FIFO full flag
+wire                    o_valid_m        ; // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
+wire                    o_almostempty    ; // FIFO almostempty flag (determined by i_almostempty_lvl)
+wire                    o_empty          ; // FIFO empty flag
+wire   [DATA_WIDTH-1:0] o_dataout        ; // Pop data from FIFO
 
 
 sync_fifo #(
-	.FIFO_DEPTH (FIFO_DEPTH),
-	.DATA_WIDTH (DATA_WIDTH),
-	.WIDTH      (WIDTH)
+	.FIFO_DEPTH(FIFO_DEPTH), // FIFO depth
+	.DATA_WIDTH(DATA_WIDTH), // Data width
+	.ADDR_WIDTH(ADDR_WIDTH)  // Address width
 ) DUT (
 	.i_clk            (i_clk            ),
 	.i_rst_n          (i_rst_n          ),
@@ -169,7 +171,7 @@ initial begin
 	i_valid_s = 0;
 	i_ready_m = 0;
 
-	$finish();
+	$stop();
 end
 
 endmodule
