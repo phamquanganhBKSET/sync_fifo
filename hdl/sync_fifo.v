@@ -78,12 +78,12 @@ module sync_fifo #(
 		.rd_addr          (rd_addr          ),
 		.i_almostfull_lvl (i_almostfull_lvl ),
 		.i_almostempty_lvl(i_almostempty_lvl),
-        .o_ready_s        (o_ready_s        ),
-        .o_almostfull     (o_almostfull     ),
-        .o_full           (o_full           ),
-        .o_valid_m        (o_valid_m        ),
-        .o_almostempty    (o_almostempty    ),
-        .o_empty          (o_empty          ) 
+		.o_ready_s        (o_ready_s        ),
+		.o_almostfull     (o_almostfull     ),
+		.o_full           (o_full           ),
+		.o_valid_m        (o_valid_m        ),
+		.o_almostempty    (o_almostempty    ),
+		.o_empty          (o_empty          ) 
 	);
 
 endmodule

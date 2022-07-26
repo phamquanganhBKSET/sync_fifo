@@ -21,8 +21,10 @@ module write_control #(
 	always @(posedge clk or negedge reset_n) begin : proc_wr_addr
 		if(~reset_n) begin
 			wr_addr <= 0;
+		end else if (wr_en) begin
+			wr_addr <= wr_addr + 1;
 		end else begin
-			wr_addr <= wr_en ? wr_addr + 1 : wr_addr;
+			wr_addr <= wr_addr;
 		end
 	end
 

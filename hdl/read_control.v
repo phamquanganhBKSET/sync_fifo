@@ -26,8 +26,10 @@ module read_control #(
 	always @(posedge clk or negedge reset_n) begin : proc_rd_addr
 		if(~reset_n) begin
 			rd_addr <= 0;
+		end else if (rd_en) begin
+			rd_addr <= rd_addr + 1;
 		end else begin
-			rd_addr <= rd_en ? rd_addr + 1 : rd_addr;
+			rd_addr <= rd_addr;
 		end
 	end
 

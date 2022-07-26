@@ -8,7 +8,7 @@ module comparator #(
 	input  [ADDR_WIDTH:0]   wr_addr          , // Write address
 	input  [ADDR_WIDTH:0]   rd_addr          , // Read address
 	input  [ADDR_WIDTH-1:0] i_almostfull_lvl , // The number of empty memory locations in the FIFO at which the o_almostfull flag is active
-    input  [ADDR_WIDTH-1:0] i_almostempty_lvl, // The number of empty memory locations in the FIFO at which the o_almostempty flag is active
+	input  [ADDR_WIDTH-1:0] i_almostempty_lvl, // The number of empty memory locations in the FIFO at which the o_almostempty flag is active
 	output                  o_ready_s        , // Status write data into FIFO (if FIFO not full then o_ready_s = 1)					
 	output                  o_almostfull     , // FIFO almostfull flag (determined by i_almostfull_lvl)
 	output                  o_full           , // FIFO full flag
@@ -37,7 +37,7 @@ module comparator #(
 	assign o_almostfull = (num_elements[ADDR_WIDTH-1:0] >= i_almostfull_lvl);
 
 	// Flag FIFO full
-	assign o_full = (num_elements[ADDR_WIDTH-1:0] == FIFO_DEPTH);
+	assign o_full = (num_elements[ADDR_WIDTH-1:0] == (FIFO_DEPTH - 1));
 
 	// Flag FIFO almost empty
 	assign o_almostempty = (num_elements[ADDR_WIDTH-1:0] <= i_almostempty_lvl);
