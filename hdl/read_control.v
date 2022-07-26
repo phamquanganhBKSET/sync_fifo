@@ -28,8 +28,6 @@ module read_control #(
 			rd_addr <= 0;
 		end else if (rd_en) begin
 			rd_addr <= rd_addr + 1;
-		end else begin
-			rd_addr <= rd_addr;
 		end
 	end
 

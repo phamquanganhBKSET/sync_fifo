@@ -5,6 +5,8 @@ module comparator #(
 	parameter ADDR_WIDTH = $clog2(FIFO_DEPTH)  // Address width
 )
 (
+	input					clk              , // Clock signal
+	input					reset_n          , // Source domain asynchronous reset (active low)
 	input  [ADDR_WIDTH:0]   wr_addr          , // Write address
 	input  [ADDR_WIDTH:0]   rd_addr          , // Read address
 	input  [ADDR_WIDTH-1:0] i_almostfull_lvl , // The number of empty memory locations in the FIFO at which the o_almostfull flag is active
@@ -14,7 +16,7 @@ module comparator #(
 	output                  o_full           , // FIFO full flag
 	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
 	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
-	output                  o_empty            // FIFO empty flag
+	output reg              o_empty            // FIFO empty flag
 );
 
 	//============================================
@@ -22,6 +24,7 @@ module comparator #(
 	//============================================
 
 	wire [ADDR_WIDTH:0] num_elements; // Number of elements
+	wire 				pre_empty   ; // Pre empty
 
 	//============================================
 	//            Number of elements
@@ -39,11 +42,19 @@ module comparator #(
 	// Flag FIFO full
 	assign o_full = (num_elements == FIFO_DEPTH);
 
+
 	// Flag FIFO almost empty
 	assign o_almostempty = (num_elements <= i_almostempty_lvl);
 
 	// Flag FIFO empty
-	assign o_empty = (num_elements == 0);
+	assign pre_empty = (num_elements == 0);
+	always @(posedge clk or negedge reset_n) begin : proc_o_empty
+		if(~reset_n) begin
+			o_empty <= 1;
+		end else begin
+			o_empty <= pre_empty;
+		end
+	end
 
 	// Flag ready for writing data
 	assign o_ready_s = (~o_full);

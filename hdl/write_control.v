@@ -23,8 +23,6 @@ module write_control #(
 			wr_addr <= 0;
 		end else if (wr_en) begin
 			wr_addr <= wr_addr + 1;
-		end else begin
-			wr_addr <= wr_addr;
 		end
 	end
 
