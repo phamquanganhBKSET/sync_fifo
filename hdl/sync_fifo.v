@@ -19,8 +19,9 @@ module sync_fifo #(
 	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
 	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
 	output                  o_empty          , // FIFO empty flag
-	output [DATA_WIDTH-1:0] o_dataout          // Pop data from FIFO
+	output  [DATA_WIDTH-1:0] o_dataout          // Pop data from FIFO
 );
+
 
 	//============================================
 	//      Internal signals and variables
@@ -76,6 +77,8 @@ module sync_fifo #(
 	comparator comparator_inst (
 		.clk    		  (i_clk    		),
 		.reset_n		  (i_rst_n			),
+		.i_valid_s        (i_valid_s        ),
+		.i_ready_m        (i_ready_m        ),
 		.wr_addr          (wr_addr          ),
 		.rd_addr          (rd_addr          ),
 		.i_almostfull_lvl (i_almostfull_lvl ),
