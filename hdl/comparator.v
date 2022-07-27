@@ -5,19 +5,19 @@ module comparator #(
 	parameter ADDR_WIDTH = $clog2(FIFO_DEPTH)  // Address width
 )
 (
-	input					clk              , // Clock signal
-	input					reset_n          , // Source domain asynchronous reset (active low)
-	input                   i_valid_s        ,
+	input                   clk              , // Clock signal
+	input                   reset_n          , // Source domain asynchronous reset (active low)
+	input                   i_valid_s        , // Request write data into FIFO
 	input                   i_ready_m        , // Request read data from FIFO
 	input  [ADDR_WIDTH:0]   wr_addr          , // Write address
 	input  [ADDR_WIDTH:0]   rd_addr          , // Read address
 	input  [ADDR_WIDTH-1:0] i_almostfull_lvl , // The number of empty memory locations in the FIFO at which the o_almostfull flag is active
 	input  [ADDR_WIDTH-1:0] i_almostempty_lvl, // The number of empty memory locations in the FIFO at which the o_almostempty flag is active
 	output                  o_ready_s        , // Status write data into FIFO (if FIFO not full then o_ready_s = 1)					
-	output                  o_almostfull     , // FIFO almostfull flag (determined by i_almostfull_lvl)
+	output reg              o_almostfull     , // FIFO almostfull flag (determined by i_almostfull_lvl)
 	output reg              o_full           , // FIFO full flag
 	output                  o_valid_m        , // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
-	output                  o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
+	output reg              o_almostempty    , // FIFO almostempty flag (determined by i_almostempty_lvl)
 	output reg              o_empty            // FIFO empty flag
 );
 
@@ -38,7 +38,16 @@ module comparator #(
 	//============================================
 
 	// Flag FIFO almost full
-	assign o_almostfull = (num_elements >= i_almostfull_lvl);
+	always @(posedge clk or negedge reset_n) begin : proc_o_almostfull
+		if(~reset_n) begin
+			o_almostfull <= 0;
+		end else if ((num_elements == i_almostfull_lvl - 1) & i_valid_s & (!i_ready_m)) begin
+			o_almostfull <= 1;
+		end
+		else if (((num_elements == i_almostfull_lvl) & i_ready_m & (!i_valid_s)) | (num_elements == i_almostfull_lvl - 1)) begin
+			o_almostfull <= 0;
+		end
+	end
 
 	// Flag FIFO full
 	always @(posedge clk or negedge reset_n) begin : proc_o_full
@@ -52,9 +61,16 @@ module comparator #(
 		end
 	end
 
-
-	// Flag FIFO almost empty
-	assign o_almostempty = (num_elements <= i_almostempty_lvl);
+	always @(posedge clk or negedge reset_n) begin : proc_o_almostempty
+		if(~reset_n) begin
+			o_almostempty <= 1;
+		end else if (((num_elements == i_almostempty_lvl + 1) & i_ready_m & (!i_valid_s)) | o_empty) begin
+			o_almostempty <= 1;
+		end
+		else if (((num_elements == i_almostempty_lvl) & i_valid_s & (!i_ready_m)) | (num_elements == i_almostempty_lvl + 1)) begin
+			o_almostempty <= 0;
+		end
+	end
 
 	// Flag FIFO empty
 	always @(posedge clk or negedge reset_n) begin : proc_o_empty
