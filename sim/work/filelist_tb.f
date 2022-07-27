@@ -3,16 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 +incdir+../../inc
 
--v ../../libs/model/async_bidir_fifo.v
--v ../../libs/model/async_bidir_ramif_fifo.v
--v ../../libs/model/fifomem.v
--v ../../libs/model/fifomem_dp.v
--v ../../libs/model/rptr_empty.v
--v ../../libs/model/sync_fifo_model.v
--v ../../libs/model/sync_ptr.v
--v ../../libs/model/sync_r2w.v
--v ../../libs/model/sync_w2r.v
--v ../../libs/model/wptr_full.v
+-sv ../../libs/model/sync_fifo_model.sv
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Top Level Module
