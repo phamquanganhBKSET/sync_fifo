@@ -34,7 +34,9 @@ module sync_fifo_mem #(
 	//============================================
 
 	always @(posedge clk) begin : proc_wr_data
-		fifo_mem[wr_addr] <= wr_en ? wr_data : fifo_mem[wr_addr];
+		if (wr_en) begin
+			fifo_mem[wr_addr] <= wr_data;
+		end
 	end
 
 endmodule
