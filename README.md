@@ -1,12 +1,12 @@
 ### Directory layout
 .
-├───hdl         # HDL code
-├───inc         # Include file which declares all constants
-├───libs
-│   └───model   # Model which is used to check outputs of design
-└───sim         # Simulation files
-    ├───tb      # Top testbench
-    └───work    # Script for simulation
+├───hdl         # HDL code                                       <br />
+├───inc         # Include file which declares all constants      <br />
+├───libs                                                         <br />
+│   └───model   # Model which is used to check outputs of design <br />
+└───sim         # Simulation files                               <br />
+    ├───tb      # Top testbench                                  <br />
+    └───work    # Script for simulation                          <br />
 
 ### How to simulate
 1. Go to directory sim/work
