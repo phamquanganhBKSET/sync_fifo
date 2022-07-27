@@ -11,5 +11,5 @@
 ### How to simulate
 1. Go to directory sim/work
 2. Run the following commands
-  # source run_bash.sh
-  # vc
+  +) # source run_bash.sh
+  +) # vc
