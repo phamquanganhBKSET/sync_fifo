@@ -32,17 +32,27 @@ wire                    mo_almostempty   ; // Model: FIFO almostempty flag (dete
 wire                    mo_empty         ; // Model: FIFO empty flag
 wire   [DATA_WIDTH-1:0] mo_dataout       ; // Model: Pop data from FIFO
 
-wire 					err_ready_s    	 ; // Status write data into FIFO (if FIFO not full then o_ready_s = 1)
-wire 					err_full       	 ; // FIFO full flag
-wire 					err_valid_m    	 ; // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
-wire 					err_empty      	 ; // FIFO empty flag
-wire 					err_dataout    	 ; // Pop data from FIFO
+reg 					err_ready_s    	 ; // Status write data into FIFO (if FIFO not full then o_ready_s = 1)
+reg 					err_full       	 ; // FIFO full flag
+reg 					err_valid_m    	 ; // Status read data from FIFO (if FIFO not empty then o_valid_m = 1)
+reg 					err_empty      	 ; // FIFO empty flag
+reg 					err_dataout    	 ; // Pop data from FIFO
 
-assign err_ready_s = (o_ready_s !== mo_ready_s);
-assign err_full    = (o_full    !== mo_full   );
-assign err_valid_m = (o_valid_m !== mo_valid_m);
-assign err_empty   = (o_empty   !== mo_empty  );
-assign err_dataout = (o_dataout !== mo_dataout);
+always_ff @(posedge i_clk or negedge i_rst_n) begin : proc_err
+    if(~i_rst_n) begin
+        err_ready_s <= 0;
+        err_full    <= 0;
+        err_valid_m <= 0;
+        err_empty   <= 0;
+        err_dataout <= 0;
+    end else begin
+        err_ready_s <= (o_ready_s !== mo_ready_s);
+        err_full    <= (o_full    !== mo_full   );
+        err_valid_m <= (o_valid_m !== mo_valid_m);
+        err_empty   <= (o_empty   !== mo_empty  );
+        err_dataout <= o_empty ? 0 : (o_dataout !== mo_dataout);
+    end
+end
 
 sync_fifo #(
 	.FIFO_DEPTH(FIFO_DEPTH), // FIFO depth
