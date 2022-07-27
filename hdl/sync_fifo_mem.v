@@ -6,11 +6,11 @@ module sync_fifo_mem #(
 	parameter ADDR_WIDTH = $clog2(MEM_DEPTH) // Address width
 )
 (
-	input					clk    , // Clock signal
-	input					reset_n, // Synchonous reset
+	input                   clk    , // Clock signal
+	input                   reset_n, // Synchonous reset
 	input  [DATA_WIDTH-1:0] wr_data, // Write data
 	input  [ADDR_WIDTH-1:0] wr_addr, // Write address
-	input					wr_en  , // Write enable
+	input                   wr_en  , // Write enable
 	input  [ADDR_WIDTH-1:0] rd_addr, // Read address
 	output [DATA_WIDTH-1:0] rd_data  // Read data
 );
