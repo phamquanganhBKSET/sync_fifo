@@ -44,30 +44,34 @@ module comparator #(
 		end else if ((num_elements == i_almostfull_lvl - 1) & i_valid_s & (!i_ready_m)) begin
 			o_almostfull <= 1;
 		end
-		else if (((num_elements == i_almostfull_lvl) & i_ready_m & (!i_valid_s)) | (num_elements == i_almostfull_lvl - 1)) begin
+		else if ((num_elements == i_almostfull_lvl) & i_ready_m & (!i_valid_s)) begin
 			o_almostfull <= 0;
 		end
 	end
 
-	// Flag FIFO full
+	// Flag FIFO full and flag valid for reading data
 	always @(posedge clk or negedge reset_n) begin : proc_o_full
 		if(~reset_n) begin
 			o_full <= 0;
+			o_ready_s <= 1;
 		end else if ((((num_elements == (FIFO_DEPTH-1)) & i_valid_s) | (num_elements == FIFO_DEPTH))  & (!i_ready_m)) begin
 			o_full <= 1;
+			o_ready_s <= 0;
 		end
 		else begin
 			o_full <= 0;
+			o_ready_s <= 1;
 		end
 	end
 
+	// Flag FIFO almost empty
 	always @(posedge clk or negedge reset_n) begin : proc_o_almostempty
 		if(~reset_n) begin
 			o_almostempty <= 1;
 		end else if (((num_elements == i_almostempty_lvl + 1) & i_ready_m & (!i_valid_s)) | o_empty) begin
 			o_almostempty <= 1;
 		end
-		else if (((num_elements == i_almostempty_lvl) & i_valid_s & (!i_ready_m)) | (num_elements == i_almostempty_lvl + 1)) begin
+		else if ((num_elements == i_almostempty_lvl) & i_valid_s & (!i_ready_m)) begin
 			o_almostempty <= 0;
 		end
 	end
@@ -76,18 +80,15 @@ module comparator #(
 	always @(posedge clk or negedge reset_n) begin : proc_o_empty
 		if(~reset_n) begin
 			o_empty <= 1;
+			o_valid_m <= 0;
 		end else if ((((num_elements == 1) & i_ready_m) | (num_elements == 0)) & (!i_valid_s)) begin
 			o_empty <= 1;
+			o_valid_m <= 0;
 		end
 		else begin
 			o_empty <= 0;
+			o_valid_m <= 1;
 		end
 	end
-
-	// Flag ready for writing data
-	assign o_ready_s = (~o_full);
-
-	// Flag valid for reading data
-	assign o_valid_m = (~o_empty);
 
 endmodule
