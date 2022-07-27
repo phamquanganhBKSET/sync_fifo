@@ -1,4 +1,4 @@
-`include "sync_fifo_defines.vh"
+`include "../../inc/sync_fifo_defines.vh"
 
 module sync_fifo_model #(
 	parameter FIFO_DEPTH = `FIFO_DEPTH       , // FIFO depth
