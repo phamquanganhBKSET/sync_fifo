@@ -20,8 +20,8 @@ module sync_fifo_mem #(
 	//============================================
 
 	reg [DATA_WIDTH-1:0] fifo_mem [0:MEM_DEPTH-1]; // FIFO memory
-																								 // Number of elements: MEM_DEPTH
-																								 // Data width of each element: DATA_WIDTH 
+                                                 // Number of elements: MEM_DEPTH
+                                                 // Data width of each element: DATA_WIDTH 
 
 	//============================================
 	//               Read data
