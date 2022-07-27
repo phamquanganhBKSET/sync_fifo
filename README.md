@@ -1,4 +1,5 @@
-### Directory layout
+# Directory layout
+```bash
 .
 ├───hdl         # HDL code
 ├───inc         # Include file which declares all constants
@@ -6,11 +7,13 @@
 │   └───model   # Model which is used to check outputs of design
 └───sim         # Simulation files
     ├───tb      # Top testbench
-    └───work    # Script for simulation
+    └───work    # Scripts for simulation
+```
 
-### How to simulate
+# How to simulate
 1. Go to directory sim/work
 2. Run the following commands
 ```sh
 $ source run_bash.sh
 $ vc
+```
