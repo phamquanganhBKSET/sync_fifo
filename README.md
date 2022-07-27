@@ -1,7 +1,7 @@
 # Directory layout
 ```bash
 .
-├───doc         # Design spec
+├───doc         # Design specs
 ├───hdl         # HDL code
 ├───inc         # Include file which declares all constants
 ├───libs
