@@ -75,8 +75,8 @@ module sync_fifo #(
 	//============================================
 
 	comparator comparator_inst (
-		.clk    		  (i_clk    		),
-		.reset_n		  (i_rst_n			),
+		.clk              (i_clk            ),
+		.reset_n          (i_rst_n          ),
 		.i_valid_s        (i_valid_s        ),
 		.i_ready_m        (i_ready_m        ),
 		.wr_addr          (wr_addr          ),
