@@ -38,19 +38,10 @@ reg 					err_valid_m    	 ; // Status read data from FIFO (if FIFO not empty the
 reg 					err_empty      	 ; // FIFO empty flag
 reg 					err_dataout    	 ; // Pop data from FIFO
 
-always_ff @(posedge i_clk or negedge i_rst_n) begin : proc_err
-    if(~i_rst_n) begin
-        err_ready_s <= 0;
-        err_full    <= 0;
-        err_valid_m <= 0;
-        err_empty   <= 0;
-        err_dataout <= 0;
-    end else begin
-        err_ready_s <= (o_ready_s !== mo_ready_s);
-        err_full    <= (o_full    !== mo_full   );
-        err_valid_m <= (o_valid_m !== mo_valid_m);
-        err_empty   <= (o_empty   !== mo_empty  );
-        err_dataout <= o_empty ? 0 : (o_dataout !== mo_dataout);
+always_ff @(posedge i_clk) begin
+    if((o_ready_s !== mo_ready_s)||(o_full !== mo_full)||(o_valid_m !== mo_valid_m)||(o_empty !== mo_empty) ||(!o_empty && (o_dataout !== mo_dataout))) begin 
+        $display("ERROR");
+        $stop();
     end
 end
 
