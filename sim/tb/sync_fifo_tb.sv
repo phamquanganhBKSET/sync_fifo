@@ -90,6 +90,31 @@ always_ff @(posedge i_clk) begin
     end
 end
 
+AP_READY_S: assert property (
+    @(posedge i_clk) 1 |-> (o_ready_s === mo_ready_s))
+    else
+        $error("ERROR at %t ns", $realtime());
+
+AP_FULL:assert property (
+    @(posedge i_clk) 1 |-> (o_full === mo_full))
+    else
+        $error("ERROR at %t ns", $realtime());
+
+AP_VALID_M:assert property (
+    @(posedge i_clk) 1 |-> (o_valid_m === mo_valid_m))
+    else
+        $error("ERROR at %t ns", $realtime());
+
+AP_EMPTY: assert property (
+    @(posedge i_clk) 1 |-> (o_empty === mo_empty))
+    else
+        $error("ERROR at %t ns", $realtime());
+
+AP_DATAOUT: assert property (
+    @(posedge i_clk) !o_empty |-> (o_dataout === mo_dataout))
+    else
+        $error("ERROR at %t ns", $realtime());
+
 initial begin 
     i_clk             = 0;
     i_rst_n           = 0;
