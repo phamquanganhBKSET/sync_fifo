@@ -38,13 +38,6 @@ reg 					err_valid_m    	 ; // Status read data from FIFO (if FIFO not empty the
 reg 					err_empty      	 ; // FIFO empty flag
 reg 					err_dataout    	 ; // Pop data from FIFO
 
-always_ff @(posedge i_clk) begin
-    if((o_ready_s !== mo_ready_s)||(o_full !== mo_full)||(o_valid_m !== mo_valid_m)||(o_empty !== mo_empty) ||(!o_empty && (o_dataout !== mo_dataout))) begin 
-        $display("ERROR");
-        $stop();
-    end
-end
-
 sync_fifo #(
 	.FIFO_DEPTH(FIFO_DEPTH), // FIFO depth
 	.DATA_WIDTH(DATA_WIDTH), // Data width
@@ -89,119 +82,84 @@ sync_fifo_model #(
 
 always #10 i_clk = ~i_clk;
 
+// compare DUT output with sync FIFO model output
+always_ff @(posedge i_clk) begin
+    if((o_ready_s !== mo_ready_s)||(o_full !== mo_full)||(o_valid_m !== mo_valid_m)||(o_empty !== mo_empty) ||(!o_empty && (o_dataout !== mo_dataout))) begin 
+        $display("ERROR at %t ns", $realtime());
+        $stop();
+    end
+end
+
 initial begin 
     i_clk             = 0;
     i_rst_n           = 0;
     i_valid_s         = 0;
     i_ready_m         = 0;
-    i_almostempty_lvl = 2;
-    i_almostfull_lvl  = 5;
+    i_almostempty_lvl = 5;
+    i_almostfull_lvl  = `FIFO_DEPTH - 2;
     i_datain          = 0;
     @(negedge i_clk);
     i_rst_n = 1;
-    // Read and write simultaneously when FIFO is empty
-    repeat(10) begin
-        @(negedge i_clk);
-        i_datain = $random();
-        i_valid_s = 1;
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_datain = $random();
-    i_valid_s = 1;
-    @(negedge i_clk);
-    i_valid_s = 0;
-    @(negedge i_clk);
-    i_datain = $random();
-    i_valid_s = 1;
-    // Write to overflow
-    repeat(5) begin
-        @(negedge i_clk);
-        i_datain = $random();
-        i_valid_s = 1;
-    end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    // Read to empty
-    repeat(10) begin
-        @(negedge i_clk);
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_ready_m = 0;
-    // Write to full
-    repeat(10) begin
-        @(negedge i_clk);
-        i_datain = $random();
-        i_valid_s = 1;
-    end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    // Read and write simultaneously when FIFO is full
-    repeat(10) begin
-        @(negedge i_clk);
-        i_datain = $random();
-        i_valid_s = 1;
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    i_ready_m = 0;
-    // Read data
-    repeat(5) begin
-        @(negedge i_clk);
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_ready_m = 0;
-    // Read and write simultaneously when FIFO is not full
-    repeat(10) begin
-        @(negedge i_clk);
-        i_datain = $random();
-        i_valid_s = 1;
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    i_ready_m = 0;
-    // Write -> read when FIFO is not full
-    repeat(10) begin
+
+// SINGLE_WRITE_THEN_READ
+    repeat(255) begin
         @(negedge i_clk);
         i_datain = $random();
         i_valid_s = 1;
         i_ready_m = 0;
+    end
+    repeat(255) begin
+        @(negedge i_clk);
+        i_ready_m = 1;
+        i_valid_s = 0;
+    end
+
+// MULTIPLE_WRITE_AND_READ
+    repeat(10000) begin
+        @(negedge i_clk);
+        i_datain = $random();
+        i_valid_s = 1;
+        i_ready_m = 1;
+    end
+
+// TEST_FULL_FLAG & TEST_ALMOSFULL_FLAG
+    repeat(300) begin
+        @(negedge i_clk);
+        i_datain = $random();
+        i_valid_s = 1;
+        i_ready_m = 0;
+    end
+
+// MULTIPLE_WRITE_AND_READ WHEN FIFO IS FULL
+    repeat(500) begin
+        @(negedge i_clk);
+        i_datain = $random();
+        i_valid_s = 1;
+        i_ready_m = 1;
+    end
+
+// TEST_EMPTY_FLAG && TEST_ALMOSEMPTY_FLAG
+    repeat(300) begin
         @(negedge i_clk);
         i_valid_s = 0;
         i_ready_m = 1;
     end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    i_ready_m = 0;
-    // Read data
-    repeat(2) begin
-        @(negedge i_clk);
-        i_ready_m = 1;
-    end
-    @(negedge i_clk);
-    i_ready_m = 0;
-    // Write data
-    repeat(5) begin
+
+// MULTIPLE_WRITE_AND_READ WHEN FIFO IS EMPTY
+    repeat(500) begin
         @(negedge i_clk);
         i_datain = $random();
         i_valid_s = 1;
-    end
-    @(negedge i_clk);
-    i_valid_s = 0;
-    // Read to empty
-    repeat(10) begin
         i_ready_m = 1;
-        @(negedge i_clk);
     end
-    i_ready_m = 0;
-    
-    @(negedge i_clk);
-    i_valid_s = 0;
-    i_ready_m = 0;
+
+// RANDOM VALUE SIGNAL
+    repeat(10000000) begin
+        @(negedge i_clk);
+        i_datain = $random();
+        i_valid_s = $random();
+        i_ready_m = $random();
+    end
     $stop();
 end
 endmodule

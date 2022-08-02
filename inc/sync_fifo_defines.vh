@@ -1,2 +1,2 @@
-`define FIFO_DEPTH 8
+`define FIFO_DEPTH 256
 `define DATA_WIDTH 32
