@@ -96,26 +96,26 @@ module sync_fifo_model #(
 	//check
 	always @(*) begin 
 		if(i_almostfull_lvl > FIFO_DEPTH) begin 
-			$display("ERROR: i_almostfull_lvl invalid at %t", $realtime());
+			$display("@(%t): ERROR: i_almostfull_lvl invalid", $realtime());
 			$stop();
 		end
 		if(i_almostempty_lvl > FIFO_DEPTH) begin 
-			$display("ERROR: i_almostempty_lvl invalid at %t", $realtime());
+			$display("@(%t): ERROR: i_almostempty_lvl invalid", $realtime());
 			$stop();
 		end
 	end
 
 	always_ff @(posedge i_clk) begin
 		if(o_empty && i_ready_m) begin 
-			$display("ERROR: FIFO is empty, cannot be read at %t", $realtime());
+			$display("@(%t): WARNING: FIFO is empty, cannot be read", $realtime());
 		end
 
 		if(o_full && i_valid_s) begin 
-			$display("ERROR: FIFO is full, cannot be write at %t", $realtime());
+			$display("@(%t): WARNING: FIFO is full, cannot be write", $realtime());
 		end
 
 		if((i_datain =='x) && i_valid_s) begin 
-			$display("ERROR: datain invalid %t", $realtime());
+			$display("@(%t): WARNING: datain invalid", $realtime());
 		end
 
 	end	
