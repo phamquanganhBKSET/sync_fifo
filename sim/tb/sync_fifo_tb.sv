@@ -127,20 +127,20 @@ initial begin
     i_rst_n = 1;
 
 // SINGLE_WRITE_THEN_READ
-    repeat(255) begin
+    repeat(250) begin
         @(negedge i_clk);
         i_datain = $random();
         i_valid_s = 1;
         i_ready_m = 0;
     end
-    repeat(255) begin
+    repeat(230) begin
         @(negedge i_clk);
         i_ready_m = 1;
         i_valid_s = 0;
     end
 
 // MULTIPLE_WRITE_AND_READ
-    repeat(10000) begin
+    repeat(300) begin
         @(negedge i_clk);
         i_datain = $random();
         i_valid_s = 1;
@@ -148,6 +148,9 @@ initial begin
     end
 
 // TEST_FULL_FLAG & TEST_ALMOSFULL_FLAG
+    i_rst_n = 0;
+    @(negedge i_clk);
+    i_rst_n = 1;
     repeat(300) begin
         @(negedge i_clk);
         i_datain = $random();
@@ -179,7 +182,7 @@ initial begin
     end
 
 // RANDOM VALUE SIGNAL
-    repeat(10000000) begin
+    repeat(500) begin
         @(negedge i_clk);
         i_datain = $random();
         i_valid_s = $random();
