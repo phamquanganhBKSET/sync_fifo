@@ -34,4 +34,3 @@ set_app_var mw_design_library $MW_DESIGN_LIB
 open_mw_lib     $mw_design_library
 set_tlu_plus_files -max_tluplus $TLUPLUS_MAX_FILE \
                    -tech2itf_map $MAP_FILE
-

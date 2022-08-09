@@ -37,7 +37,7 @@ module sync_fifo #(
 
 	sync_fifo_mem sync_fifo_mem_inst (
 		.clk    (i_clk                  ),
-		.reset_n(i_rst_n                ),
+		// .reset_n(i_rst_n                ),
 		.wr_data(i_datain               ),
 		.wr_addr(wr_addr[ADDR_WIDTH-1:0]),
 		.wr_en  (wr_en                  ),

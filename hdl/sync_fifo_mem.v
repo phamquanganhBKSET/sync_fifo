@@ -7,7 +7,7 @@ module sync_fifo_mem #(
 )
 (
 	input                   clk    , // Clock signal
-	input                   reset_n, // Synchonous reset
+	// input                   reset_n, // Synchonous reset
 	input  [DATA_WIDTH-1:0] wr_data, // Write data
 	input  [ADDR_WIDTH-1:0] wr_addr, // Write address
 	input                   wr_en  , // Write enable

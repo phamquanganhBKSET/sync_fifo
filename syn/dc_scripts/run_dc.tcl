@@ -15,7 +15,7 @@ analyze -vcs "-sverilog -y $RTL_SOURCE +libext+.v+.sv" ${TOP_MODULE_FILE}
 elaborate ${TOP_LEVEL_MODULE} -lib work
 # Compile Top module
 current_design ${TOP_LEVEL_MODULE}
-check_design> ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_check_design.rpt
+check_design > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_check_design.rpt
 link
 
 #################################################################################
@@ -24,7 +24,7 @@ link
 source -echo -verbose ./dc_scripts/constraints.tcl
 
 set_cost_priority -delay
-
+#set_preferred_routing_direction -layer {METAL METAL2 METAL3 METAL4 METAL5 METAL6} -direction horizontal
 compile_ultra 
 
 #################################################################################
@@ -37,11 +37,12 @@ write -format verilog -hierarchy -output ${RESULTS_DIR}/${TOP_LEVEL_MODULE}_netl
 # Generate Final Reports
 #################################################################################
 check_timing > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_check_timing.rpt
-report_timing -nworst 100 -sort_by slack -normalized_slack   > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_timing.rpt
-report_constraint -all_violators                             > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_constraints.rpt
-
+report_timing -nworst 100 -sort_by slack  > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_timing.rpt
+report_constraint -all_violators > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_constraints.rpt
+report_qor > reports/sync_fifo_final_qor.rpt
 if {[shell_is_in_topographical_mode]} {
   report_area -physical -nosplit > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_area.rpt
 } else {
   report_area -nosplit > ${REPORTS_DIR}/${TOP_LEVEL_MODULE}_final_area.rpt
 }
+#exit
