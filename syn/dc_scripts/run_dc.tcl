@@ -1,6 +1,6 @@
 # This file has been edited to keep it simple
-source -echo -verbose ./scripts/common_setup.tcl
-source -echo -verbose ./scripts/dc_setup.tcl
+source -echo -verbose ./dc_scripts/common_setup.tcl
+source -echo -verbose ./dc_scripts/dc_setup.tcl
 
 printvar target_library
 printvar link_library

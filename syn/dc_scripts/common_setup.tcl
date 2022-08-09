@@ -10,6 +10,7 @@ set SCRIPT_DIR        ../../sync_fifo/syn/dc_scripts
 ################################################################################
 set RTL_SOURCE         $PROJECT_DIR/hdl
 set INCLUDE_SOURCE     $PROJECT_DIR/inc
+set TOP_MODULE_FILE    ${RTL_SOURCE}/dti_emmc_host.sv
 
 ##########################################################################################
 # User-defined variables for logical library setup in dc_setup.tcl

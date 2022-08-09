@@ -1,1 +1,2 @@
-dc_shell -topo -f dc_script/run_dc.tcl -output_log_file log
+reset
+dc_shell -topo -f dc_scripts/run_dc.tcl -output_log_file log
