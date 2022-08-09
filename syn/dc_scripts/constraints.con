@@ -1,0 +1,10 @@
+set CLOCK_PERIOD     5.0
+set MAX_SKEW        $CLOCK_PERIOD * 0.05
+set MAX_JITTER_TIME      $CLOCK_PERIOD * 0.02
+set MARGIN_TIME          $CLOCK_PERIOD * 0.02
+set MAX_TRANSITION_TIME  $CLOCK_PERIOD * 0.1
+create_clock -period $CLOCK_PERIOD -waveform {0 expr{$CLOCK_PERIOD / 2}}  [get_ports clk_i]
+set_clock_uncertainty {expr {$MAX_SKEW + $MAX_JITTER_TIME + $MARGIN_TIME}} [get_ports clk_i]
+set_clock_transition $MAX_TRANSITION_TIME [get_clock clk_i]
+set_clock_latency –source –max 1.2 [get_clock clk_i]
+
